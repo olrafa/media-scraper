@@ -20,17 +20,20 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
 
     if (itemFound) {
       console.log(`${searchTerm} found on ${mediaOutlet}.`);
-      client.query(
-        "INSERT INTO mentions (searchTerm, site) VALUES ($1, $2)",
-        [searchTerm, mediaOutlet],
-        (error) => {
-          if (error) {
-            throw error;
-          } else {
-            console.log("Mention added.");
+      await new Promise((resolve, reject) => {
+        client.query(
+          "INSERT INTO mentions (searchTerm, site) VALUES ($1, $2)",
+          [searchTerm, mediaOutlet],
+          (error) => {
+            if (error) {
+              reject(error);
+            } else {
+              console.log("Mention added.");
+              resolve();
+            }
           }
-        }
-      );
+        );
+      });
     } else {
       console.log(`${searchTerm} not found on ${mediaOutlet}.`);
     }
@@ -41,13 +44,14 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
   }
 };
 
-const runScraping = async () => {
+const runScrapingSequentially = async () => {
   for (const searchTerm of SEARCH_TERMS) {
     for (const { mediaOutlet, url } of WEBSITES) {
       await scrapeWebsiteForTerm(mediaOutlet, url, searchTerm);
     }
   }
   console.log("Search finished at", new Date());
+  process.exit();
 };
 
-runScraping();
+setTimeout(() => runScrapingSequentially(), 5000);
