@@ -9,7 +9,7 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
   const page = await browser.newPage();
 
   try {
-    console.log("Searching on", mediaOutlet);
+    console.log("Searching now on", mediaOutlet);
     // Navigate to the URL
     await page.goto(url);
 
