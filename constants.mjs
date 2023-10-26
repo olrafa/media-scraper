@@ -24,7 +24,6 @@ export const WEBSITES = [
     mediaOutlet: "Diário do Nordeste",
     url: "https://diariodonordeste.verdesmares.com.br/",
   },
-  { mediaOutlet: "Extra", url: "https://extra.globo.com/" },
   {
     mediaOutlet: "Correio Braziliense",
     url: "https://www.correiobraziliense.com.br/",
