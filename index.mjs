@@ -1,9 +1,8 @@
 import puppeteer from "puppeteer";
 import { client } from "./config.mjs";
+import { SEARCH_TERMS, WEBSITES } from "./constants.mjs";
 
 const { launch } = puppeteer;
-
-export const SEARCH_TERMS = ["Neymar"];
 
 const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
   const browser = await launch({ headless: "new" });
@@ -45,27 +44,14 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
   }
 };
 
-const runScrapingSequentially = async (siteList) => {
+const runScrapingSequentially = async () => {
   for (const searchTerm of SEARCH_TERMS) {
-    for (const { site, url } of siteList) {
-      await scrapeWebsiteForTerm(site, url, searchTerm);
+    for (const { mediaOutlet, url } of WEBSITES) {
+      await scrapeWebsiteForTerm(mediaOutlet, url, searchTerm);
     }
   }
   console.log("Search finished at", new Date());
   process.exit();
 };
 
-const getSites = async () => {
-  try {
-    const response = await fetch("https://neymarmeter.vercel.app/sites");
-    if (!response.ok) {
-      throw new Error("Something went wrong with the request.");
-    }
-    const siteList = await response.json();
-    siteList && setTimeout(() => runScrapingSequentially(siteList), 5000);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
-getSites();
+setTimeout(() => runScrapingSequentially(), 5000);
