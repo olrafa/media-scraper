@@ -21,7 +21,7 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
 
     if (itemFound) {
       console.log(`${searchTerm} found on ${mediaOutlet}.`);
-      /* await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         client.query(
           "INSERT INTO mentions (searchTerm, site) VALUES ($1, $2)",
           [searchTerm, mediaOutlet],
@@ -34,7 +34,7 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
             }
           }
         );
-      }); */
+      });
     } else {
       console.log(`${searchTerm} not found on ${mediaOutlet}.`);
     }
