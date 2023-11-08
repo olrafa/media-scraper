@@ -1,9 +1,8 @@
 name: Scheduled Scraper
 
 on:
-  push:
-    branches:
-      - ts
+  schedule:
+    - cron: "0 */6 * * *"
 
 jobs:
   build:

@@ -23,11 +23,9 @@ const scrapeWebsiteForTerm = async (
 
     const itemFound = pageContent.includes(searchTerm);
 
-    console.log(mediaOutlet, "ok");
-
-    /*     if (itemFound) {
+    if (itemFound) {
       console.log(`${searchTerm} found on ${mediaOutlet}.`);
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         client.query(
           "INSERT INTO mentions (searchTerm, site) VALUES ($1, $2)",
           [searchTerm, mediaOutlet],
@@ -43,7 +41,7 @@ const scrapeWebsiteForTerm = async (
       });
     } else {
       console.log(`${searchTerm} not found on ${mediaOutlet}.`);
-    } */
+    }
   } catch (error) {
     console.error(`Error scraping ${mediaOutlet}: ${(error as Error).message}`);
   } finally {
