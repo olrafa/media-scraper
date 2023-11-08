@@ -12,5 +12,10 @@
     "dotenv": "^16.3.1",
     "pg": "^8.11.3",
     "puppeteer": "^21.4.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.9",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
