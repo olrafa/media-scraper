@@ -1,11 +1,15 @@
 import puppeteer from "puppeteer";
-import { client } from "./config.mjs";
+import { client } from "./config";
 
 const { launch } = puppeteer;
 
 const SEARCH_TERMS = ["Neymar"];
 
-const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
+const scrapeWebsiteForTerm = async (
+  mediaOutlet: string,
+  url: string,
+  searchTerm: string
+) => {
   const browser = await launch({ headless: "new" });
   const page = await browser.newPage();
 
@@ -21,7 +25,7 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
 
     if (itemFound) {
       console.log(`${searchTerm} found on ${mediaOutlet}.`);
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         client.query(
           "INSERT INTO mentions (searchTerm, site) VALUES ($1, $2)",
           [searchTerm, mediaOutlet],
@@ -39,13 +43,15 @@ const scrapeWebsiteForTerm = async (mediaOutlet, url, searchTerm) => {
       console.log(`${searchTerm} not found on ${mediaOutlet}.`);
     }
   } catch (error) {
-    console.error(`Error scraping ${mediaOutlet}: ${error.message}`);
+    console.error(`Error scraping ${mediaOutlet}: ${(error as Error).message}`);
   } finally {
     await browser.close();
   }
 };
 
-const runScrapingSequentially = async (siteList) => {
+const runScrapingSequentially = async (
+  siteList: { site: string; url: string }[]
+) => {
   for (const searchTerm of SEARCH_TERMS) {
     for (const { site, url } of siteList) {
       await scrapeWebsiteForTerm(site, url, searchTerm);
