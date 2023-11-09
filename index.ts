@@ -63,7 +63,7 @@ const runScrapingSequentially = async (
 
 const getSites = async () => {
   try {
-    const response = await fetch("https://neymarmeter.vercel.app/sites");
+    const response = await fetch("https://mencionometro.vercel.app/sites");
     if (!response.ok) {
       throw new Error("Something went wrong with the request.");
     }
