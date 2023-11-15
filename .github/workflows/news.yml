@@ -1,9 +1,8 @@
 name: Scheduled Scraper
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   build:
@@ -21,7 +20,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Run Scraper
+      - name: Get news
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
