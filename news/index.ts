@@ -1,5 +1,4 @@
 import axios from "axios";
-import { SAMPLE } from "../sample";
 import { client } from "../config";
 import { SEARCH_TERMS } from "../constants";
 
@@ -29,9 +28,9 @@ let config = {
   data: data,
 };
 
-/* axios(config)
-  .then((response) => console.log(response.data.topStories))
-  .catch((error) => console.log(error)); */
+axios(config)
+  .then((response) => filterData(response.data.topStories))
+  .catch((error) => console.log(error));
 
 const filterData = (stories: Story[]) => {
   const recentStories = stories.filter(
@@ -41,13 +40,23 @@ const filterData = (stories: Story[]) => {
   addToTable(recentStories);
 };
 
-const addToTable = async (stories: Story[]) => {
-  stories.map(({ title, link, source }) =>
+const addToTable = async (stories: Story[]) =>
+  Promise.all(stories.map((story) => addStory(story))).then(() =>
+    process.exit()
+  );
+
+const addStory = async ({ title, link, source }: Story) =>
+  await new Promise<void>((resolve, reject) =>
     client.query(
       "INSERT INTO stories (term, title, link, source) values ($1, $2, $3, $4)",
-      [searchTerm, title, link, source]
+      [searchTerm, title, link, source],
+      (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          console.log("Story added.", source, "-", title);
+          resolve();
+        }
+      }
     )
   );
-};
-
-filterData(SAMPLE);
