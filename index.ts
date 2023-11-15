@@ -1,9 +1,8 @@
 import puppeteer from "puppeteer";
 import { client } from "./config";
+import { SEARCH_TERMS } from "./constants";
 
 const { launch } = puppeteer;
-
-const SEARCH_TERMS = ["Neymar"];
 
 const scrapeWebsiteForTerm = async (
   mediaOutlet: string,
