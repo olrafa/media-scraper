@@ -41,9 +41,10 @@ const filterData = (stories: Story[]) => {
 };
 
 const addToTable = async (stories: Story[]) =>
-  Promise.all(stories.map((story) => addStory(story))).then(() =>
-    process.exit()
-  );
+  Promise.all(stories.map((story) => addStory(story))).then(() => {
+    console.log("Finished at", new Date());
+    process.exit();
+  });
 
 const addStory = async ({ title, link, source }: Story) =>
   await new Promise<void>((resolve, reject) =>

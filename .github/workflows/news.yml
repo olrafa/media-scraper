@@ -1,4 +1,4 @@
-name: Scheduled Scraper
+name: Get latest news
 
 on:
   schedule:
