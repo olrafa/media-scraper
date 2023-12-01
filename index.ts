@@ -4,11 +4,7 @@ import { SEARCH_TERMS } from "./constants";
 
 const { launch } = puppeteer;
 
-const scrapeWebsiteForTerm = async (
-  mediaOutlet: string,
-  url: string,
-  searchTerm: string
-) => {
+const scrapeWebsiteForTerm = async (mediaOutlet: string, url: string) => {
   const browser = await launch({ headless: "new" });
   const page = await browser.newPage();
 
@@ -20,27 +16,29 @@ const scrapeWebsiteForTerm = async (
     // Extract the page content and check if the term is present
     const pageContent = await page.content();
 
-    const itemFound = pageContent.includes(searchTerm);
+    SEARCH_TERMS.forEach(async (term) => {
+      const itemFound = pageContent.includes(term);
 
-    if (itemFound) {
-      console.log(`${searchTerm} found on ${mediaOutlet}.`);
-      await new Promise<void>((resolve, reject) => {
-        client.query(
-          "INSERT INTO mentions (searchTerm, site) VALUES ($1, $2)",
-          [searchTerm, mediaOutlet],
-          (error) => {
-            if (error) {
-              reject(error);
-            } else {
-              console.log("Mention added.");
-              resolve();
+      if (itemFound) {
+        console.log(`${term} found on ${mediaOutlet}.`);
+        await new Promise<void>((resolve, reject) => {
+          client.query(
+            "INSERT INTO mentions (searchTerm, site) VALUES ($1, $2)",
+            [term, mediaOutlet],
+            (error) => {
+              if (error) {
+                reject(error);
+              } else {
+                console.log("Mention added.");
+                resolve();
+              }
             }
-          }
-        );
-      });
-    } else {
-      console.log(`${searchTerm} not found on ${mediaOutlet}.`);
-    }
+          );
+        });
+      } else {
+        console.log(`${term} not found on ${mediaOutlet}.`);
+      }
+    });
   } catch (error) {
     console.error(`Error scraping ${mediaOutlet}: ${(error as Error).message}`);
   } finally {
@@ -51,10 +49,8 @@ const scrapeWebsiteForTerm = async (
 const runScrapingSequentially = async (
   siteList: { site: string; url: string }[]
 ) => {
-  for (const searchTerm of SEARCH_TERMS) {
-    for (const { site, url } of siteList) {
-      await scrapeWebsiteForTerm(site, url, searchTerm);
-    }
+  for (const { site, url } of siteList) {
+    await scrapeWebsiteForTerm(site, url);
   }
   console.log("Search finished at", new Date());
   process.exit();
