@@ -29,7 +29,7 @@ let config = {
 };
 
 axios(config)
-  .then((response) => filterData(response.data.topStories))
+  .then((response) => filterData(response.data.topStories || []))
   .catch((error) => console.log(error));
 
 const filterData = (stories: Story[]) => {
@@ -37,7 +37,7 @@ const filterData = (stories: Story[]) => {
     ({ date }) => date.includes("hora") || date.includes("minuto")
   );
 
-  addToTable(recentStories);
+  addToTable(recentStories || []);
 };
 
 const addToTable = async (stories: Story[]) =>
