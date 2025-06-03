@@ -12,7 +12,7 @@
     "axios": "^1.6.2",
     "dotenv": "^16.3.1",
     "pg": "^8.11.3",
-    "puppeteer": "^21.4.0"
+    "puppeteer": "^24.10.0"
   },
   "devDependencies": {
     "@types/pg": "^8.10.9",
